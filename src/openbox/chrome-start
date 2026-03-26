@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# Chrome arguments
+# The remote debugging port is 9223, but is resolved using socat from the port 9222
+CHROME_ARGS=(
+  --remote-debugging-port=9223
+  --remote-debugging-address=0.0.0.0
+  --user-data-dir=/config/chrome-data
+  --no-first-run
+  --no-default-browser-check
+  --lang=fr-FR,fr
+  # 
+  # --no-sandbox
+  --disable-features=IsolateOrigins,site-per-process,TranslateUI
+  --disable-blink-features=AutomationControlled
+  --window-size=1920,1080
+  --disable-prompt-on-repost
+  --no-crash-upload
+  --password-store=basic
+  --use-mock-keychain
+  --enable-features=NetworkService,NetworkServiceInProcess,AcceleratedVideoDecodeLinuxGL
+)
+
+# No sandbox
+if [[ "${DISABLE_SANDBOX}" == "true" ]]; then
+  CHROME_ARGS+=(
+    --no-sandbox
+  )
+fi
+
+# Disable dev SHM usage
+if [[ "${DISABLE_SHM}" == "true" ]]; then
+  CHROME_ARGS+=(
+    --disable-dev-shm-usage
+  )
+fi
+
+# GPU acceleration désactivée ? On ajoute les flags correspondants
+if [[ "${DISABLE_GPU_ACCELERATION}" == "true" ]]; then
+  CHROME_ARGS+=(
+    --disable-gpu
+    --disable-software-rasterizer
+  )
+else
+  CHROME_ARGS+=(
+      --enable-gpu
+      --use-gl=angle
+      --use-angle=gl-egl
+      --enable-unsafe-webgpu
+      --enable-gpu-rasterization
+      --enable-zero-copy
+      --enable-features=VaapiVideoDecoder,VaapiVideoEncoder,CanvasOopRasterization
+      --use-vulkan=native
+      --in-process-gpu
+  )
+fi
+
+/usr/bin/google-chrome "${CHROME_ARGS[@]}" &
+
+# Wait for the CDP to be available
+until curl -s http://localhost:9223/json/version > /dev/null 2>&1; do
+  sleep 0.5
+done
+
+echo "Chrome is now available."
+
+# Move to the "START_PAGE" page
+if [[ "${START_PAGE}" != "" ]]; then
+    curl -s -X PUT "http://localhost:9223/json/new?${START_PAGE}"
+fi
+
+# Forward the port 9222 to the local 9223 port
+socat TCP-LISTEN:9222,fork,reuseaddr TCP:127.0.0.1:9223 &

@@ -2,8 +2,9 @@
 output/
 root/config/output/
 
-# Docker build cache
+# Docker
 .dockerignore
+docker-compose.override.yml
 
 # IDE files
 .vscode/
@@ -21,3 +22,6 @@ logs/
 # Temporary files
 tmp/
 temp/
+
+# AI
+.claude

@@ -1,0 +1,26 @@
+{
+    "browser": {
+        "isolated": false,
+        "cdpEndpoint": "http://localhost:9223",
+        "launchOptions": {
+            "headless": false
+        },
+        "contextOptions": {
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        }
+    },
+    "server": {
+        "port": 3002,
+        "host": "0.0.0.0",
+        "allowedHosts": ["*"],
+        "trustProxy": true,
+        "requireSSL": false
+    },
+    "capabilities": ["pdf", "vision"],
+    "outputDir": "/config/output",
+    "imageResponses": "allow",
+    "network": {
+        "allowedOrigins": ["*"],
+        "blockedOrigins": []
+    }
+}

@@ -1,0 +1,16 @@
+services:
+  chrome-mcp:
+    build: .
+    image: chrome-mcp:latest
+    container_name: chrome-mcp
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "3000:3000"  # VNC HTTP
+      - "3002:3002"  # MCP Server
+      - "9222:9222"  # Chrome CDP
+    volumes:
+      - chrome-data:/config/chrome-data
+              
+volumes:
+  chrome-data: ~

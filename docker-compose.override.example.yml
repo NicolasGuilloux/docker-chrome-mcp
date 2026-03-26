@@ -1,0 +1,36 @@
+services:
+  chrome-mcp:
+    # Edit SHM Size
+    # shm_size: '2gb'
+    
+    volumes:
+      # Override the Playwright MCP config
+      # - ./root/config/config.json:/config/config.json
+      
+    environment:
+      # Start Chrome on a specific page
+      # - START_PAGE=chrome://gpu
+      
+      # Disable Sandbox
+      # - DISABLE_SANDBOX=true
+      
+      # Disable dev SHM usage
+      # - DISABLE_SHM=true
+      
+      # Disable GPU acceleration
+      # - DISABLE_GPU_ACCELERATION=true
+      
+      # Add NVIDIA capabilities
+      # - NVIDIA_VISIBLE_DEVICES=all
+      # - NVIDIA_DRIVER_CAPABILITIES=all,graphics,display
+      
+    # Pass your NVIDIA GPU to the VM 
+    # devices:
+    #   - /dev/dri:/dev/dri
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu, video, display]

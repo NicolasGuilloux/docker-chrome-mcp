@@ -1,0 +1,8 @@
+# Set a beautiful black background
+xsetroot -solid black
+
+# Start Chrome
+/defaults/chrome-start
+
+# Start MCP server connected to Chrome's CDP endpoint
+npx -y @playwright/mcp --config /config/config.json
